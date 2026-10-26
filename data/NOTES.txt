@@ -1,0 +1,55 @@
+TIDEGUARD DATA NOTES
+Collected: 26 Oct 2026 (pre-work, before 9:30 AM start)
+Area: Guayaquil (Urdesa, city centre, south, north zones)
+
+FILES
+1. zones.json
+   - 8 zones: name, lat, lon, elevation_m, dist_to_river_km, known_trouble_spot
+   - Coordinates are approximate, checked on OpenStreetMap
+   - Elevation: from Open-Meteo elevation API (real data, but coarse;
+     4 of 8 zones are exactly 6 m, so it barely separates zones)
+   - dist_to_river_km: distance to ONE fixed riverfront point, not to
+     actual water. Rough proxy only.
+   - known_trouble_spot: hand-labelled by us. Treat as the main
+     vulnerability signal. Source of labels: our own judgement/research.
+
+2. rain_2026-02-18.json
+   - Hourly precipitation per zone for 18 Feb 2026 (Open-Meteo archive)
+   - STATUS: REAL data, no nulls
+   - Limit: gridded data, so zones share values. Only ~4 distinct rain
+     profiles across the 8 zones. Do not claim street-level rain.
+   - Peak: 15.3 mm/hr at 07:00, about 68 mm for the day at the highest zones.
+     Heavy rain ran 01:00 to 07:00.
+
+3. tide_test.json
+   - Hourly sea level for 18 Feb 2026 (Open-Meteo marine)
+   - STATUS: REAL model output, but offshore point in the Gulf
+     (-2.7, -80.3), NOT the Guayaquil estuary
+   - Behaves like a tide: highs at about 04:00 (1.15 m) and 16:00 (1.40 m),
+     lows at about 10:00 and 23:00
+   - Limit: estuary tide timing and height differ and probably lag this.
+     Label as "coarse offshore tide" in the demo.
+   - If it causes trouble: switch to simulated tide (2 highs and 2 lows a
+     day, same function signature) and write "tide: simulated".
+
+4. roads.graphml
+   - OSM drivable road graph, 6 km radius around (-2.195, -79.90)
+   - 13,438 nodes. Path check Urdesa to hospital area: True
+
+BACKTEST (18 Feb 2026), what the data shows
+- Rain and rising/high tide overlapped from about 01:00 to 07:00
+- Worst rain hour (07:00) came after high tide, when the tide was falling
+- Highest tide of the day (16:00, 1.40 m) had almost no rain, so it is a
+  good "no alert" test case
+
+KNOWN LIMITS (say these before a judge does)
+- No ground truth for flooding on 18 Feb (no sensor data or flood reports yet)
+- Backtest shows when the risk score WOULD flag danger, not that flooding
+  was predicted or confirmed
+- Rain is gridded, tide is offshore, elevation and river distance are proxies
+- Zone coordinates are approximate
+
+REAL vs SIMULATED
+- Real: rain, elevation, road graph, offshore tide model
+- Hand-made: zone list, known_trouble_spot labels
+- Simulated (live demo only): sensor/report confirmation for road closures

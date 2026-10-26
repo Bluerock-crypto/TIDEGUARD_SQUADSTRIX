@@ -1,0 +1,66 @@
+[
+  {
+    "name": "Urdesa",
+    "lat": -2.1709,
+    "lon": -79.9078,
+    "elevation_m": 6.0,
+    "dist_to_river_km": 3.86,
+    "known_trouble_spot": 1
+  },
+  {
+    "name": "Av 9 de Octubre",
+    "lat": -2.1895,
+    "lon": -79.8895,
+    "elevation_m": 10.0,
+    "dist_to_river_km": 1.02,
+    "known_trouble_spot": 1
+  },
+  {
+    "name": "Av Barcelona",
+    "lat": -2.128,
+    "lon": -79.912,
+    "elevation_m": 12.0,
+    "dist_to_river_km": 8.01,
+    "known_trouble_spot": 1
+  },
+  {
+    "name": "Isla Trinitaria",
+    "lat": -2.25,
+    "lon": -79.9,
+    "elevation_m": 6.0,
+    "dist_to_river_km": 6.68,
+    "known_trouble_spot": 1
+  },
+  {
+    "name": "Monte Sinai",
+    "lat": -2.08,
+    "lon": -79.95,
+    "elevation_m": 11.0,
+    "dist_to_river_km": 14.72,
+    "known_trouble_spot": 1
+  },
+  {
+    "name": "Febres Cordero",
+    "lat": -2.205,
+    "lon": -79.93,
+    "elevation_m": 6.0,
+    "dist_to_river_km": 5.61,
+    "known_trouble_spot": 0
+  },
+  {
+    "name": "Alborada",
+    "lat": -2.14,
+    "lon": -79.9,
+    "elevation_m": 7.0,
+    "dist_to_river_km": 6.26,
+    "known_trouble_spot": 0
+  },
+  {
+    "name": "Guasmo Central",
+    "lat": -2.25,
+    "lon": -79.89,
+    "elevation_m": 6.0,
+    "dist_to_river_km": 6.42,
+    "known_trouble_spot": 0
+  }
+]
