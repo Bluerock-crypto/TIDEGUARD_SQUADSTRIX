@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#0b1721">
+    <title>TideGuard · Flood-aware response</title>
+    <link rel="preconnect" href="https://unpkg.com">
+    <link rel="preconnect" href="https://tile.openstreetmap.org">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="">
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+    <script src="app.js" defer></script>
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside class="sidebar" aria-label="Replay controls">
+        <a class="brand" href="#" aria-label="TideGuard home">
+          <span class="brand-mark" aria-hidden="true">T</span>
+          <span><strong>TideGuard</strong><small>RESPONSE INTELLIGENCE</small></span>
+        </a>
+
+        <section class="replay-heading">
+          <p class="eyebrow">MISSION CONTROL <span class="live-dot"></span></p>
+          <h1>Flood-aware<br>route replay</h1>
+          <p class="muted">Guayaquil, Ecuador <span class="separator">/</span> 18 Feb 2026</p>
+        </section>
+
+        <div id="connection-status" class="connection-status" role="status" aria-live="polite">
+          <span class="status-indicator"></span>
+          <span>Loading replay data…</span>
+        </div>
+
+        <section class="control-panel" aria-labelledby="conditions-title">
+          <div class="section-heading">
+            <div><p class="eyebrow">ENVIRONMENT</p><h2 id="conditions-title">Replay conditions</h2></div>
+            <span class="panel-icon" aria-hidden="true">⌁</span>
+          </div>
+
+          <div class="control-group">
+            <div class="control-label">
+              <label for="hour-slider">Replay hour</label>
+              <span id="hour-source" class="source-tag source-real">REAL REPLAY</span>
+            </div>
+            <div class="range-value"><output id="hour-output" for="hour-slider">07:00</output><span>18 Feb</span></div>
+            <input id="hour-slider" type="range" min="0" max="23" step="1" value="7" aria-describedby="hour-hint">
+            <div class="range-scale"><span>00:00</span><span>12:00</span><span>23:00</span></div>
+            <p id="hour-hint" class="control-hint">Hourly historical replay</p>
+          </div>
+
+          <div class="control-group">
+            <div class="control-label">
+              <label for="rain-slider">Rainfall</label>
+              <span id="rain-source" class="source-tag source-real">REAL REPLAY</span>
+            </div>
+            <div class="range-value"><output id="rain-output" for="rain-slider">15.3</output><span>mm / hr</span></div>
+            <input id="rain-slider" type="range" min="0" max="20" step="0.1" value="15.3" aria-describedby="rain-hint">
+            <div class="range-scale"><span>0 mm</span><span>10 mm</span><span>20 mm</span></div>
+            <p id="rain-hint" class="control-hint">Rainfall from the selected replay hour</p>
+          </div>
+
+          <div class="control-group">
+            <div class="control-label">
+              <label for="tide-slider">Offshore tide</label>
+              <span id="tide-source" class="source-tag source-offshore">OFFSHORE TIDE</span>
+            </div>
+            <div class="range-value"><output id="tide-output" for="tide-slider">0.16</output><span>meters</span></div>
+            <input id="tide-slider" type="range" min="-1" max="1.5" step="0.01" value="0.16" aria-describedby="tide-hint">
+            <div class="range-scale"><span>-1.0 m</span><span>0.25 m</span><span>1.5 m</span></div>
+            <p id="tide-hint" class="control-hint">Coarse offshore model; not an estuary gauge</p>
+          </div>
+
+          <button id="reset-replay" class="reset-button" type="button">↺ <span>Reset to replay values</span></button>
+        </section>
+
+        <section class="legend-panel" aria-label="Map legend">
+          <p class="eyebrow">MAP KEY</p>
+          <div class="legend-row"><span class="legend-dot low"></span><span>Low risk</span><span class="legend-dot medium"></span><span>Moderate</span><span class="legend-dot high"></span><span>High</span></div>
+          <div class="legend-row route-key"><span class="route-swatch original"></span><span>Original route</span></div>
+          <div class="legend-row route-key"><span class="route-swatch rerouted"></span><span>TideGuard route</span></div>
+          <p class="legend-note">Zone circles show an approximately 1 km radius.</p>
+        </section>
+
+        <footer class="sidebar-footer">
+          <span class="footer-mark">TG</span>
+          <span>Decision support only<br><strong>Not a navigation service</strong></span>
+        </footer>
+      </aside>
+
+      <main class="workspace">
+        <header class="topbar">
+          <div class="breadcrumbs"><span>OPERATIONS</span><span class="crumb-separator">/</span><strong>LIVE REPLAY</strong></div>
+          <div class="topbar-right"><span class="date-pill"><span class="calendar-icon">▦</span> WED, FEB 18 <i></i> 2026</span><span class="demo-pill"><span></span> SIMULATION</span></div>
+        </header>
+
+        <section class="map-section" aria-label="Flood risk and route map">
+          <div id="map" role="application" aria-label="Leaflet map of Guayaquil with flood risk zones and response routes"></div>
+          <div class="map-title-card">
+            <span class="map-pin" aria-hidden="true">⌖</span>
+            <div><strong>Guayaquil response area</strong><span>Risk zones &amp; ambulance route</span></div>
+          </div>
+          <div class="map-coordinates"><span class="map-coord-dot"></span> ECUADOR <span class="coord-divider">·</span> GUAYAS</div>
+          <div class="map-attribution-note">© OpenStreetMap contributors</div>
+        </section>
+
+        <section class="route-panel" aria-label="Route impact summary" aria-live="polite">
+          <div class="route-heading">
+            <div><p class="eyebrow">ROUTE IMPACT</p><h2>Ambulance reroute <span id="route-mode" class="source-tag source-simulated">SIMULATED</span></h2></div>
+            <span id="route-status" class="route-state"><span></span> Evaluating conditions</span>
+          </div>
+          <div class="route-metrics">
+            <article class="metric-card">
+              <span class="metric-icon risk-icon" aria-hidden="true">!</span>
+              <div><p>Roads at risk</p><strong id="roads-value">—</strong><span id="roads-note" class="metric-note">Checking risk zones</span></div>
+            </article>
+            <article class="metric-card">
+              <span class="metric-icon time-icon" aria-hidden="true">◷</span>
+              <div><p>Extra minutes</p><strong id="minutes-value">—</strong><span id="minutes-note" class="metric-note">Compared with original</span></div>
+            </article>
+            <article class="metric-card reason-card">
+              <span class="metric-icon reason-icon" aria-hidden="true">↗</span>
+              <div><p>Why this route</p><strong id="reason-value">Loading route assessment…</strong><span id="reason-note" class="metric-note">The replay updates as conditions change</span></div>
+            </article>
+          </div>
+          <div class="route-footnote"><span class="footnote-icon">i</span><span id="route-disclaimer">Fallback route and risk values are simulated previews, not verified road closures or turn-by-turn guidance.</span></div>
+        </section>
+      </main>
+    </div>
+  </body>
+</html>
